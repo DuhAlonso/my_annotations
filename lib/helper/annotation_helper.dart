@@ -54,4 +54,9 @@ class AnnotationHelper {
     List annotations = await dataBase.rawQuery(sql);
     return annotations;
   }
+
+  Future<int> deleteAnnotation(int id) async {
+    var dataBase = await db;
+    return await dataBase.delete(nameTable, where: "id = ?", whereArgs: [id]);
+  }
 }

@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  var _db = AnnotationHelper();
+  final _db = AnnotationHelper();
   List<Annotation> annotations = [];
 
   _showAnnotationData({Annotation? annotation}) {
@@ -39,8 +39,7 @@ class _HomePageState extends State<HomePage> {
                 TextFormField(
                   autofocus: true,
                   controller: _nameController,
-                  decoration: InputDecoration(
-                    hintText: 'Anotação...',
+                  decoration: const InputDecoration(
                     label: Text(
                       'Nome da Anotação',
                       style: TextStyle(fontSize: 18),
@@ -52,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                   controller: _descriptionController,
                   keyboardType: TextInputType.multiline,
                   maxLines: 4,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     label: Text(
                       'Anotação',
                       style: TextStyle(fontSize: 18),
@@ -70,9 +69,9 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text(
+                child: const Text(
                   'Cancelar',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 17,
                   ),
@@ -108,11 +107,11 @@ class _HomePageState extends State<HomePage> {
     if (annotationActual == null) {
       String date = DateTime.now().toString();
       Annotation annotation = Annotation(title, description, date);
-      int result = await _db.saveAnnotation(annotation);
+      await _db.saveAnnotation(annotation);
     } else {
       annotationActual.title = title;
       annotationActual.description = description;
-      int result = await _db.updateAnnotation(annotationActual);
+      await _db.updateAnnotation(annotationActual);
     }
     _listAnnotations();
   }
@@ -129,8 +128,6 @@ class _HomePageState extends State<HomePage> {
       annotations = annotationsTemp;
     });
     annotationsTemp = [];
-
-    print(annotations.toList());
   }
 
   formatDate(String date) {
@@ -143,10 +140,15 @@ class _HomePageState extends State<HomePage> {
     String formattedDateDay = formatterDay.format(dateConvertedDay);
     String formattedDateMonth = formatterMonth.format(dateConvertedMonth);
     return Text(
-      '$formattedDateDay' + '\n' + '${formattedDateMonth.toUpperCase()}',
+      '$formattedDateDay' '\n' '${formattedDateMonth.toUpperCase()}',
       textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
     );
+  }
+
+  _deleteAnnotation(int id) async {
+    _db.deleteAnnotation(id);
+    _listAnnotations();
   }
 
   @override
@@ -160,7 +162,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Minhas Anotações'),
+        title: const Text('Minhas Anotações'),
         centerTitle: true,
       ),
       body: Column(
@@ -179,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         GestureDetector(
-                          child: Icon(
+                          child: const Icon(
                             Icons.edit,
                             color: Colors.green,
                           ),
@@ -187,13 +189,15 @@ class _HomePageState extends State<HomePage> {
                             _showAnnotationData(annotation: annotation);
                           },
                         ),
-                        SizedBox(width: 15),
+                        const SizedBox(width: 15),
                         GestureDetector(
-                          child: Icon(
+                          child: const Icon(
                             Icons.delete,
                             color: Colors.red,
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            _deleteAnnotation(annotation.id!);
+                          },
                         ),
                       ],
                     ),
@@ -208,7 +212,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           _showAnnotationData();
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
